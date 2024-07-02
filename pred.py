@@ -125,7 +125,11 @@ def app():
             st.sidebar.subheader('Make a Prediction')
             input_data = {}
             for column in df.drop(columns=[target_column] + exclude_columns).columns:
-                input_data[column] = st.sidebar.number_input(f"Input {column}", value=float(df[column].mean()) if df[column].dtype in ['float64', 'int64'] else df[column].mode()[0])
+                if df[column].dtype in ['float64', 'int64']:
+                    input_data[column] = st.sidebar.number_input(f"Input {column}", value=float(df[column].mean()))
+                else:
+                    unique_values = df[column].unique()
+                    input_data[column] = st.sidebar.selectbox(f"Input {column}", unique_values)
             
             input_df = pd.DataFrame([input_data])
             transformed_input = preprocessor.transform(input_df)
