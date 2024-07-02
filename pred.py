@@ -125,7 +125,7 @@ def app():
             st.sidebar.subheader('Make a Prediction')
             input_data = {}
             for column in df.drop(columns=[target_column] + exclude_columns).columns:
-                input_data[column] = st.sidebar.number_input(f"Input {column}", value=float(df[column].mean()))
+                input_data[column] = st.sidebar.number_input(f"Input {column}", value=float(df[column].mean()) if df[column].dtype in ['float64', 'int64'] else df[column].mode()[0])
             
             input_df = pd.DataFrame([input_data])
             transformed_input = preprocessor.transform(input_df)
